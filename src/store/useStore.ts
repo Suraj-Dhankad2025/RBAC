@@ -39,8 +39,8 @@ export const useStore = create<Store>((set, get) => ({
       permissions: ['read'],
     },
   ],
-  user: null,
-  isAuthenticated: false,
+  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null,
+  isAuthenticated: !!localStorage.getItem('user'),
   addUser: async (user) => {
     const hashedPassword = await hashPassword(user.password);
     set((state) => ({
@@ -70,12 +70,16 @@ export const useStore = create<Store>((set, get) => ({
   login: async (email, password) => {
     const user = get().users.find((u) => u.email === email);
     if (user && await verifyPassword(password, user.password)) {
+      localStorage.setItem('user', JSON.stringify(user));
       set({ user, isAuthenticated: true });
       return true;
     }
     return false;
   },
-  logout: () => set({ user: null, isAuthenticated: false }),
+  logout: () => {
+    localStorage.removeItem('user');
+    set({ user: null, isAuthenticated: false });
+  }
 }));
 
 // Initialize admin password
