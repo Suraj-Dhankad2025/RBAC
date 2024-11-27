@@ -1,4 +1,4 @@
-import { Shield, Trash2, Edit } from 'lucide-react';
+import { Shield, Trash2 } from 'lucide-react';
 import { useStore } from '../store/useStore';
 
 export function RoleList() {
